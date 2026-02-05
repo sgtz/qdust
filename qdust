@@ -1,0 +1,57 @@
+#!/bin/bash
+# qdust — Q expect test runner wrapper
+#
+# Usage:
+#   qdust test file.q              Normal mode (IPC)
+#   qdust -debug test file.q       Debug single file (q)) on error)
+#   qdust -debug test dir/         Debug all files (Q generates script)
+#   qdust promote file.q           Accept .corrected
+#   qdust check                    CI check
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[[ -f "$SCRIPT_DIR/env.sh" ]] && source "$SCRIPT_DIR/env.sh"
+
+Q_EXEC="${QDUST_Q:-$HOME/q/${QOS}64/q}"
+
+QDUST_LIB="$SCRIPT_DIR/qdust.q"
+if [[ ! -f "$QDUST_LIB" ]]; then
+  echo "Error: qdust.q not found in $SCRIPT_DIR" >&2
+  exit 1
+fi
+
+# rlwrap: readline wrapper for Q's console (line editing, history, color).
+# QDUST_RLWRAP      — path to rlwrap binary (default: auto-detect from PATH)
+# QDUST_RLWRAP_OPTS — flags passed to rlwrap
+RLWRAP_BIN="${QDUST_RLWRAP:-$(command -v rlwrap 2>/dev/null || true)}"
+RLWRAP_OPTS="${QDUST_RLWRAP_OPTS:--A -pYELLOW -c -r -H ~/.qdust_history}"
+
+GEN_DIR="${QDUST_DEBUG_DIR:-$(dirname "$QDUST_LIB")/generated}"
+
+run_q() {
+  if [[ -n "$RLWRAP_BIN" ]]; then
+    "$RLWRAP_BIN" $RLWRAP_OPTS "$Q_EXEC" "$QDUST_LIB" "$@"
+  else
+    "$Q_EXEC" "$QDUST_LIB" "$@"
+  fi
+}
+
+if [[ " $* " != *" -debug "* ]]; then
+  # Normal mode: replace this process with Q
+  if [[ -n "$RLWRAP_BIN" ]]; then
+    exec "$RLWRAP_BIN" $RLWRAP_OPTS "$Q_EXEC" "$QDUST_LIB" "$@"
+  else
+    exec "$Q_EXEC" "$QDUST_LIB" "$@"
+  fi
+else
+  # Debug mode: Q discovers files and writes a debug script, then we run it
+  export QDUST_DEBUG_PID=$$
+  run_q "$@"
+
+  # Q wrote a pointer file containing the path to the generated debug script
+  DEBUG_PTR="$GEN_DIR/.debug-script-$$"
+  if [[ -f "$DEBUG_PTR" ]]; then
+    DEBUG_SCRIPT=$(cat "$DEBUG_PTR")
+    rm -f "$DEBUG_PTR"
+    [[ -f "$DEBUG_SCRIPT" ]] && exec bash "$DEBUG_SCRIPT"
+  fi
+fi

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "timestamp": "2026.02.13D07:00:18.731267000",
+  "duration_ms": 2333,
+  "q_version": "4.1 2025.07.09",
+  "files_tested": 10,
+  "total_tests": 39,
+  "total_passed": 39,
+  "total_failed": 0,
+  "total_new": 0,
+  "gates": {
+    "min_tests": null,
+    "min_pass": "100%"
+  },
+  "files": [
+    {"file": "/Users/steven/r/dist/qdust/examples/basic.t", "category": "preflight", "tests": 6, "passed": 6, "failed": 0, "duration_ms": 235, "hash": 13934},
+    {"file": "/Users/steven/r/dist/qdust/examples/ci.q", "category": "preflight", "tests": 4, "passed": 4, "failed": 0, "duration_ms": 232, "hash": 18711},
+    {"file": "/Users/steven/r/dist/qdust/examples/colocation.q", "category": "preflight", "tests": 0, "passed": 0, "failed": 0, "duration_ms": 230, "hash": 14533},
+    {"file": "/Users/steven/r/dist/qdust/examples/colocation.t", "category": "preflight", "tests": 5, "passed": 5, "failed": 0, "duration_ms": 231, "hash": 15740},
+    {"file": "/Users/steven/r/dist/qdust/examples/inline.q", "category": "preflight", "tests": 8, "passed": 8, "failed": 0, "duration_ms": 234, "hash": 20419},
+    {"file": "/Users/steven/r/dist/qdust/examples/labels.q", "category": "preflight", "tests": 7, "passed": 7, "failed": 0, "duration_ms": 232, "hash": 28388},
+    {"file": "/Users/steven/r/dist/qdust/examples/loading/demo.t", "category": "preflight", "tests": 5, "passed": 5, "failed": 0, "duration_ms": 234, "hash": 19158},
+    {"file": "/Users/steven/r/dist/qdust/examples/loading/lib/utils.q", "category": "preflight", "tests": 0, "passed": 0, "failed": 0, "duration_ms": 234, "hash": 7540},
+    {"file": "/Users/steven/r/dist/qdust/examples/prefix/src/math.q", "category": "preflight", "tests": 0, "passed": 0, "failed": 0, "duration_ms": 234, "hash": 14473},
+    {"file": "/Users/steven/r/dist/qdust/examples/prefix/tests/math.t", "category": "preflight", "tests": 4, "passed": 4, "failed": 0, "duration_ms": 232, "hash": 16967}
+  ]
+}
